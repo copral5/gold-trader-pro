@@ -5,13 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="color-scheme" content="dark">
 <title>Gold Trader Pro Journal — XAUUSD</title>
-<!-- Telegram Mini App SDK (must load first) -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<!-- Supabase JS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<!-- Icons -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.10.0/dist/tabler-icons.min.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -212,67 +208,38 @@ textarea.form-input{resize:vertical;min-height:90px}
 .lightbox-close:hover{opacity:1}
 .lightbox-label{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:var(--muted);font-size:12px;background:rgba(0,0,0,.6);padding:5px 14px;border-radius:20px}
 
-/* ── TELEGRAM MINI APP INTEGRATION ── */
-body.tg-theme {
-  --bg: var(--tg-theme-bg-color, #0f0f0f);
-  --card: var(--tg-theme-secondary-bg-color, #1e1e1e);
-  --text: var(--tg-theme-text-color, #f0f0f0);
-  --gold: var(--tg-theme-button-color, #C9A84C);
+/* ── MOBILE / TELEGRAM ── */
+@media(max-width:600px){
+  .nav-btn span{display:none}
+  .nav-btn{padding:7px 9px}
+  .page{padding:14px 12px}
+  .two-col,.three-col{grid-template-columns:1fr}
+  .topbar{padding:0 12px}
 }
-/* Safe area for iOS notch/home indicator */
-.topbar { padding-top: env(safe-area-inset-top, 0); height: calc(54px + env(safe-area-inset-top, 0)); }
-.main   { padding-bottom: env(safe-area-inset-bottom, 0); }
-/* Mobile nav: show icon only on small screens */
-@media (max-width: 600px) {
-  .nav-btn span { display: none; }
-  .nav-btn { padding: 7px 10px; }
-  .topbar { padding: env(safe-area-inset-top,0) 12px 0; }
-  .page { padding: 14px 12px; }
-  .two-col, .three-col { grid-template-columns: 1fr; }
-}
-/* Sync status indicator */
-.sync-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  display: inline-block; margin-left: 6px; flex-shrink: 0;
-  transition: background 0.3s;
-}
-.sync-dot.synced  { background: #22c55e; }
-.sync-dot.syncing { background: #eab308; animation: pulse 1s infinite; }
-.sync-dot.offline { background: #ef4444; }
-.sync-dot.local   { background: #9a9a9a; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-/* Setup banner */
-#setupBanner {
-  display: none; position: fixed; inset: 0; z-index: 900;
-  background: rgba(0,0,0,.85); align-items: center; justify-content: center;
-}
-#setupBanner.open { display: flex; }
-.setup-card {
-  background: var(--card); border: .5px solid var(--border2);
-  border-radius: var(--radius-lg); padding: 32px 28px;
-  max-width: 480px; width: 92%; max-height: 90vh; overflow-y: auto;
-}
-.setup-card h2 { font-size: 20px; font-weight: 700; color: var(--gold); margin-bottom: 6px; }
-.setup-card p  { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
-.setup-step {
-  background: var(--surface); border-radius: var(--radius-md);
-  padding: 14px; margin-bottom: 10px; font-size: 13px; line-height: 1.6;
-}
-.setup-step strong { color: var(--gold); }
-.setup-step code {
-  background: rgba(201,168,76,.15); color: var(--gold);
-  padding: 2px 6px; border-radius: 4px; font-size: 12px;
-  font-family: monospace; word-break: break-all;
-}
-.setup-done-btn {
-  width: 100%; padding: 12px; background: var(--gold); border: none;
-  border-radius: var(--radius-md); font-size: 14px; font-weight: 700;
-  color: #1a1200; cursor: pointer; margin-top: 16px; font-family: inherit;
-}
-.setup-done-btn:hover { background: var(--gold-light); }
-.config-group { margin-bottom: 14px; }
-.config-label { font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 5px; }
-
+.topbar{padding-top:env(safe-area-inset-top,0);height:calc(54px + env(safe-area-inset-top,0))}
+.main{padding-bottom:env(safe-area-inset-bottom,0)}
+/* sync dot */
+.sync-dot{width:8px;height:8px;border-radius:50%;display:inline-block;transition:background .3s;flex-shrink:0}
+.sync-dot.synced{background:#22c55e}
+.sync-dot.syncing{background:#eab308;animation:sdpulse 1s infinite}
+.sync-dot.offline{background:#ef4444}
+.sync-dot.local{background:#666}
+@keyframes sdpulse{0%,100%{opacity:1}50%{opacity:.35}}
+/* sync button */
+.sync-btn{background:var(--surface);border:.5px solid var(--border2);border-radius:var(--radius-md);padding:6px 11px;font-size:12px;color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;transition:all .15s}
+.sync-btn:hover{border-color:var(--gold);color:var(--gold)}
+/* setup modal */
+.setup-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:900;align-items:center;justify-content:center}
+.setup-overlay.open{display:flex}
+.setup-box{background:var(--card);border:.5px solid var(--border2);border-radius:var(--radius-lg);padding:28px 24px;max-width:480px;width:92%;max-height:90vh;overflow-y:auto}
+.setup-box h2{font-size:18px;font-weight:700;color:var(--gold);margin-bottom:6px}
+.setup-box p{font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.6}
+.setup-step{background:var(--surface);border-radius:var(--radius-md);padding:13px;margin-bottom:9px;font-size:13px;line-height:1.6}
+.setup-step strong{color:var(--gold)}
+.setup-step code{background:rgba(201,168,76,.15);color:var(--gold);padding:2px 6px;border-radius:4px;font-size:11px;font-family:monospace;word-break:break-all}
+.setup-connect-btn{width:100%;padding:11px;background:var(--gold);border:none;border-radius:var(--radius-md);font-size:14px;font-weight:700;color:#1a1200;cursor:pointer;margin-top:14px;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px}
+.setup-connect-btn:hover{background:var(--gold-light)}
+.setup-skip{background:none;border:none;color:var(--hint);font-size:12px;cursor:pointer;font-family:inherit;display:block;margin:10px auto 0;text-align:center}
 </style>
 </head>
 <body>
@@ -284,23 +251,21 @@ body.tg-theme {
     Gold Trader Pro
   </div>
   <nav class="nav">
-    <button class="nav-btn active" onclick="showPage('dashboard',this)"><i class="ti ti-layout-dashboard"></i><span>Dashboard</span></button>
-    <button class="nav-btn" onclick="showPage('trades',this)"><i class="ti ti-list"></i><span>Trades</span></button>
-    <button class="nav-btn" onclick="showPage('analytics',this)"><i class="ti ti-chart-bar"></i><span>Analytics</span></button>
-    <button class="nav-btn" onclick="showPage('psychology',this)"><i class="ti ti-brain"></i><span>Psychology</span></button>
-    <button class="nav-btn" onclick="showPage('goals',this)"><i class="ti ti-target"></i><span>Goals</span></button>
-    <button class="nav-btn" onclick="showPage('replay',this)"><i class="ti ti-player-play"></i><span>Replay</span></button>
+    <button class="nav-btn active" onclick="showPage('dashboard',this)"><i class="ti ti-layout-dashboard"></i>Dashboard</button>
+    <button class="nav-btn" onclick="showPage('trades',this)"><i class="ti ti-list"></i>Trades</button>
+    <button class="nav-btn" onclick="showPage('analytics',this)"><i class="ti ti-chart-bar"></i>Analytics</button>
+    <button class="nav-btn" onclick="showPage('psychology',this)"><i class="ti ti-brain"></i>Psychology</button>
+    <button class="nav-btn" onclick="showPage('goals',this)"><i class="ti ti-target"></i>Goals</button>
+    <button class="nav-btn" onclick="showPage('replay',this)"><i class="ti ti-player-play"></i>Replay</button>
   </nav>
   <div class="topbar-right">
-    <div style="display:flex;align-items:center;gap:6px;cursor:pointer" onclick="openSetupBanner()" title="Cloud sync settings">
+    <button class="sync-btn" onclick="openSyncModal()" title="Cloud sync settings">
       <span class="sync-dot local" id="syncDot"></span>
-      <span id="syncLabel" style="font-size:11px;color:var(--hint)">local</span>
-    </div>
-    <button onclick="openSetupBanner()" title="Cloud sync settings" style="background:var(--surface);border:.5px solid var(--border2);border-radius:var(--radius-md);padding:6px 10px;color:var(--muted);cursor:pointer;font-size:15px;display:flex;align-items:center;gap:5px;font-family:inherit;font-size:12px;transition:all .15s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'">
-      <i class="ti ti-cloud" style="font-size:15px"></i><span>Sync</span>
+      <i class="ti ti-cloud" style="font-size:14px"></i>
+      <span id="syncLabel">Sync</span>
     </button>
     <div class="balance-chip" id="topBalance" onclick="openBalanceModal()" title="Click to set starting balance" style="cursor:pointer">$10,000 &nbsp;<span class="up">+$0</span></div>
-    <button class="add-btn" onclick="showPage('newtrade',null)"><i class="ti ti-plus"></i><span>New Trade</span></button>
+    <button class="add-btn" onclick="showPage('newtrade',null)"><i class="ti ti-plus"></i>New Trade</button>
   </div>
 </div>
 
@@ -728,223 +693,150 @@ body.tg-theme {
 
 <script>
 /* ═══════════════════════════════════════════
-   TELEGRAM MINI APP — init & theme
+   TELEGRAM MINI APP
 ═══════════════════════════════════════════ */
 const tg = window.Telegram?.WebApp;
 let TG_USER_ID = null;
 
 if (tg) {
   tg.ready();
-  tg.expand();                  // open fullscreen
-  tg.enableClosingConfirmation(); // warn before close if trades unsaved
-
-  // Apply Telegram colour theme
-  if (tg.colorScheme === 'light') {
-    document.documentElement.style.setProperty('--bg','#f4f4f4');
-    document.documentElement.style.setProperty('--surface','#e8e8e8');
-    document.documentElement.style.setProperty('--card','#ffffff');
-    document.documentElement.style.setProperty('--text','#1a1a1a');
-    document.documentElement.style.setProperty('--muted','#555');
-    document.documentElement.style.setProperty('--hint','#888');
-    document.documentElement.style.setProperty('--border','rgba(0,0,0,0.07)');
-    document.documentElement.style.setProperty('--border2','rgba(0,0,0,0.12)');
-  }
-
-  // Get Telegram user id for data isolation
+  tg.expand();
+  tg.enableClosingConfirmation();
   const user = tg.initDataUnsafe?.user;
-  if (user?.id) {
-    TG_USER_ID = 'tg_' + user.id;
-  }
-
-  // Back button
+  if (user?.id) TG_USER_ID = 'tg_' + user.id;
   tg.BackButton.onClick(() => {
-    // Go back to dashboard if not already there
-    const activePage = document.querySelector('.page.active')?.id;
-    if (activePage && activePage !== 'page-dashboard') {
+    const ap = document.querySelector('.page.active')?.id;
+    if (ap && ap !== 'page-dashboard') {
       showPage('dashboard', document.querySelector('.nav-btn'));
       tg.BackButton.hide();
     }
   });
 }
-
-// Use Telegram user id, or fall back to a device fingerprint
 if (!TG_USER_ID) {
-  let local_uid = localStorage.getItem('gtp_device_uid');
-  if (!local_uid) {
-    local_uid = 'device_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
-    localStorage.setItem('gtp_device_uid', local_uid);
-  }
-  TG_USER_ID = local_uid;
+  let uid = localStorage.getItem('gtp_uid');
+  if (!uid) { uid = 'dev_' + Math.random().toString(36).slice(2); localStorage.setItem('gtp_uid', uid); }
+  TG_USER_ID = uid;
 }
 
 /* ═══════════════════════════════════════════
-   SUPABASE — cloud sync
+   SUPABASE SYNC
 ═══════════════════════════════════════════ */
-const SB_URL_KEY  = 'gtp_sb_url';
-const SB_KEY_KEY  = 'gtp_sb_key';
-
-let supabase = null;
+let _supabase = null;
 
 function initSupabase() {
-  const url = localStorage.getItem(SB_URL_KEY);
-  const key = localStorage.getItem(SB_KEY_KEY);
+  const url = localStorage.getItem('gtp_sb_url');
+  const key = localStorage.getItem('gtp_sb_key');
   if (url && key && window.supabase) {
-    try {
-      supabase = window.supabase.createClient(url, key);
-      return true;
-    } catch(e) { supabase = null; }
+    try { _supabase = window.supabase.createClient(url, key); return true; }
+    catch(e) { _supabase = null; }
   }
   return false;
 }
 
-function setSyncStatus(status) {
-  // status: 'synced' | 'syncing' | 'offline' | 'local'
+function setSyncStatus(s) {
   const dot = document.getElementById('syncDot');
   const lbl = document.getElementById('syncLabel');
-  if (!dot || !lbl) return;
-  dot.className = 'sync-dot ' + status;
-  const labels = { synced:'synced', syncing:'syncing…', offline:'offline', local:'local only' };
-  lbl.textContent = labels[status] || status;
+  if (!dot) return;
+  dot.className = 'sync-dot ' + s;
+  if (lbl) lbl.textContent = {synced:'Synced', syncing:'Syncing…', offline:'Offline', local:'Sync'}[s] || 'Sync';
 }
 
-async function syncToCloud(trades, balance) {
-  if (!supabase) return;
+async function pushToCloud(trades, balance) {
+  if (!_supabase) return;
   setSyncStatus('syncing');
   try {
-    // Upsert all trades in one call (batch by 50 rows)
-    const rows = trades.map(t => ({
-      id: TG_USER_ID + '_' + t.id,
-      user_id: TG_USER_ID,
-      data: t,
-      updated_at: new Date().toISOString()
-    }));
-
-    // Split into chunks of 50
+    const rows = trades.map(t => ({ id: TG_USER_ID + '_' + t.id, user_id: TG_USER_ID, data: t, updated_at: new Date().toISOString() }));
     for (let i = 0; i < rows.length; i += 50) {
-      const { error } = await supabase
-        .from('trades')
-        .upsert(rows.slice(i, i+50), { onConflict: 'id' });
+      const { error } = await _supabase.from('trades').upsert(rows.slice(i,i+50), { onConflict: 'id' });
       if (error) throw error;
     }
-
-    // Sync balance setting
-    await supabase.from('user_settings').upsert({
-      user_id: TG_USER_ID,
-      starting_balance: balance,
-      updated_at: new Date().toISOString()
-    }, { onConflict: 'user_id' });
-
+    await _supabase.from('user_settings').upsert({ user_id: TG_USER_ID, starting_balance: balance, updated_at: new Date().toISOString() }, { onConflict: 'user_id' });
     setSyncStatus('synced');
-  } catch(e) {
-    console.error('Sync error:', e);
-    setSyncStatus('offline');
-  }
+  } catch(e) { console.error('Push error:', e); setSyncStatus('offline'); }
 }
 
-async function loadFromCloud() {
-  if (!supabase) return null;
+async function pullFromCloud() {
+  if (!_supabase) return null;
   setSyncStatus('syncing');
   try {
-    // Load trades
-    const { data: rows, error } = await supabase
-      .from('trades')
-      .select('data')
-      .eq('user_id', TG_USER_ID)
-      .order('updated_at', { ascending: true });
-
+    const { data: rows, error } = await _supabase.from('trades').select('data').eq('user_id', TG_USER_ID).order('updated_at', { ascending: true });
     if (error) throw error;
-
-    // Load balance
-    const { data: settings } = await supabase
-      .from('user_settings')
-      .select('starting_balance')
-      .eq('user_id', TG_USER_ID)
-      .single();
-
+    const { data: settings } = await _supabase.from('user_settings').select('starting_balance').eq('user_id', TG_USER_ID).single();
     setSyncStatus('synced');
-    return {
-      trades: rows ? rows.map(r => r.data) : [],
-      balance: settings?.starting_balance ?? null
-    };
-  } catch(e) {
-    console.error('Load error:', e);
-    setSyncStatus('offline');
-    return null;
+    return { trades: rows ? rows.map(r => r.data) : [], balance: settings?.starting_balance ?? null };
+  } catch(e) { console.error('Pull error:', e); setSyncStatus('offline'); return null; }
+}
+
+async function deleteFromCloud(tradeId) {
+  if (!_supabase) return;
+  try { await _supabase.from('trades').delete().eq('id', TG_USER_ID + '_' + tradeId); }
+  catch(e) { console.error('Delete sync error:', e); }
+}
+
+/* ── SYNC MODAL ── */
+function openSyncModal() {
+  document.getElementById('sbUrlInput').value = localStorage.getItem('gtp_sb_url') || '';
+  document.getElementById('sbKeyInput').value = localStorage.getItem('gtp_sb_key') || '';
+  const alreadyConnected = !!_supabase;
+  document.getElementById('connectBtn').innerHTML = alreadyConnected
+    ? '<i class="ti ti-refresh" style="font-size:16px"></i><span>Re-connect &amp; Re-sync</span>'
+    : '<i class="ti ti-cloud-upload" style="font-size:16px"></i><span>Connect &amp; Sync</span>';
+  const statusEl = document.getElementById('syncStatus');
+  statusEl.style.display = alreadyConnected ? 'block' : 'none';
+  if (alreadyConnected) {
+    statusEl.style.background = 'rgba(34,197,94,0.1)';
+    statusEl.style.color = '#22c55e';
+    statusEl.textContent = '✓ Connected — ' + TRADES.length + ' trades in cloud';
   }
+  document.getElementById('syncModal').classList.add('open');
 }
 
-async function deleteTradeFromCloud(tradeId) {
-  if (!supabase) return;
-  try {
-    await supabase
-      .from('trades')
-      .delete()
-      .eq('id', TG_USER_ID + '_' + tradeId);
-  } catch(e) { console.error('Delete sync error:', e); }
+function closeSyncModal() {
+  document.getElementById('syncModal').classList.remove('open');
 }
 
-function saveSupabaseConfig() {
-  const url = document.getElementById('sbUrl').value.trim();
-  const key = document.getElementById('sbKey').value.trim();
+async function connectSupabase() {
+  const url = document.getElementById('sbUrlInput').value.trim().replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '');
+  const key = document.getElementById('sbKeyInput').value.trim();
+  const statusEl = document.getElementById('syncStatus');
+
   if (!url || !key) { showToast('Enter both URL and anon key', true); return; }
-  // Accept both full URL and base URL
-  const cleanUrl = url.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '');
-  if (!cleanUrl.startsWith('https://') || !cleanUrl.includes('supabase.co')) {
-    showToast('URL should be https://xxx.supabase.co', true); return;
-  }
-  localStorage.setItem(SB_URL_KEY, cleanUrl);
-  localStorage.setItem(SB_KEY_KEY, key);
-  localStorage.removeItem('gtp_setup_dismissed');
-  document.getElementById('setupBanner').classList.remove('open');
+  if (!url.includes('supabase.co')) { showToast('URL must contain supabase.co', true); return; }
+
+  statusEl.style.display = 'block';
+  statusEl.style.background = 'rgba(234,179,8,0.1)';
+  statusEl.style.color = '#eab308';
+  statusEl.textContent = '⏳ Connecting…';
+
+  localStorage.setItem('gtp_sb_url', url);
+  localStorage.setItem('gtp_sb_key', key);
   initSupabase();
-  // Pull cloud data immediately
-  loadFromCloud().then(result => {
-    if (result) {
-      if (result.trades.length > 0) {
-        TRADES = result.trades;
-        saveTrades(TRADES);
-      }
-      if (result.balance !== null) {
-        STARTING_BALANCE = result.balance;
-        saveBalance(STARTING_BALANCE);
-      }
-      renderDashboard();
-      renderTrades();
-      renderAnalytics();
-      showToast('✓ Connected! ' + TRADES.length + ' trades loaded from cloud.');
+
+  const result = await pullFromCloud();
+  if (result) {
+    if (result.trades.length > 0) {
+      const cloudIds = new Set(result.trades.map(t => t.id));
+      const localOnly = TRADES.filter(t => !cloudIds.has(t.id));
+      TRADES = [...result.trades, ...localOnly];
+      saveTrades(TRADES);
+      if (localOnly.length > 0) await pushToCloud(TRADES, STARTING_BALANCE);
     }
-  });
-}
-
-function dismissSetup() {
-  document.getElementById('setupBanner').classList.remove('open');
-  localStorage.setItem('gtp_setup_dismissed', '1');
-  setSyncStatus('local');
-}
-
-function openSetupBanner() {
-  // Pre-fill existing values if already configured
-  const existingUrl = localStorage.getItem('gtp_sb_url') || '';
-  const existingKey = localStorage.getItem('gtp_sb_key') || '';
-  const urlInput = document.getElementById('sbUrl');
-  const keyInput = document.getElementById('sbKey');
-  if (urlInput) urlInput.value = existingUrl;
-  if (keyInput) keyInput.value = existingKey;
-
-  // Update button label if already connected
-  const btn = document.querySelector('.setup-done-btn');
-  if (btn) {
-    if (existingUrl && existingKey) {
-      btn.innerHTML = '<i class="ti ti-refresh" style="font-size:16px"></i> Reconnect & Re-sync';
-    } else {
-      btn.innerHTML = '<i class="ti ti-cloud-upload" style="font-size:16px"></i> Connect & Sync';
-    }
+    if (result.balance !== null) { STARTING_BALANCE = result.balance; saveBalance(STARTING_BALANCE); }
+    renderDashboard(); renderTrades(); renderAnalytics();
+    statusEl.style.background = 'rgba(34,197,94,0.1)';
+    statusEl.style.color = '#22c55e';
+    statusEl.textContent = '✓ Connected! ' + TRADES.length + ' trades loaded.';
+    setSyncStatus('synced');
+  } else {
+    statusEl.style.background = 'rgba(239,68,68,0.1)';
+    statusEl.style.color = '#ef4444';
+    statusEl.textContent = '✗ Connection failed — check your URL and anon key';
+    setSyncStatus('offline');
   }
-  document.getElementById('setupBanner').classList.add('open');
 }
 
 /* ═══════════════════════════════════════════
-   LOCAL STORAGE — always-on offline cache
+   LOCAL STORAGE
 ═══════════════════════════════════════════ */
 const STORAGE_KEY      = 'goldTraderPro_v2';
 const BALANCE_KEY      = 'goldTraderPro_balance';
@@ -962,9 +854,7 @@ function loadBalance() {
   const v = parseFloat(localStorage.getItem(BALANCE_KEY));
   return isNaN(v) ? 10000 : v;
 }
-function saveBalance(val) {
-  localStorage.setItem(BALANCE_KEY, String(val));
-}
+function saveBalance(val) { localStorage.setItem(BALANCE_KEY, String(val)); }
 function loadScreenshots() {
   try { const r = localStorage.getItem(SCREENSHOTS_KEY); return r ? JSON.parse(r) : {}; }
   catch(e) { return {}; }
@@ -974,12 +864,8 @@ function saveScreenshots(shots) {
   catch(e) { showToast('Screenshot storage full — try a smaller image', true); }
 }
 function getScreenshot(id) { return loadScreenshots()[id] || null; }
-function setScreenshot(id, dataUrl) {
-  const shots = loadScreenshots(); shots[id] = dataUrl; saveScreenshots(shots);
-}
-function deleteScreenshot(id) {
-  const shots = loadScreenshots(); delete shots[id]; saveScreenshots(shots);
-}
+function setScreenshot(id, dataUrl) { const s = loadScreenshots(); s[id] = dataUrl; saveScreenshots(s); }
+function deleteScreenshot(id) { const s = loadScreenshots(); delete s[id]; saveScreenshots(s); }
 
 let TRADES = loadTrades();
 let STARTING_BALANCE = loadBalance();
@@ -1369,10 +1255,10 @@ function confirmDelete() {
   if (idx !== -1) {
     const id = TRADES[idx].id;
     deleteScreenshot(id);
-    deleteTradeFromCloud(id);
+    deleteFromCloud(id);
     TRADES.splice(idx, 1);
     saveTrades(TRADES);
-    syncToCloud(TRADES, STARTING_BALANCE);
+    pushToCloud(TRADES, STARTING_BALANCE);
     renderTrades();
     renderDashboard();
     renderAnalytics();
@@ -1629,7 +1515,7 @@ function submitTrade() {
   }
 
   // Sync to cloud
-  syncToCloud(TRADES, STARTING_BALANCE);
+  pushToCloud(TRADES, STARTING_BALANCE);
 
   // Refresh everything
   renderTrades();
@@ -1965,13 +1851,13 @@ function saveBalanceSetting() {
   document.getElementById('balanceInput').classList.remove('error');
   STARTING_BALANCE = val;
   saveBalance(val);
-  syncToCloud(TRADES, STARTING_BALANCE);
+  pushToCloud(TRADES, STARTING_BALANCE);
   closeBalanceModal();
   renderDashboard();
   renderAnalytics();
   showToast(`✓ Starting balance set to $${val.toLocaleString()}`);
 }
-// (Enter key for balance modal handled in main DOMContentLoaded)
+
 
 /* ═══════════════════════════════════════════
    NAVIGATION
@@ -1990,11 +1876,7 @@ function showPage(id, btn) {
   }
   if (id === 'analytics') renderAnalytics();
   if (id === 'trades') renderTrades();
-  // Telegram back button: show when not on dashboard
-  if (tg?.BackButton) {
-    if (id === 'dashboard') tg.BackButton.hide();
-    else tg.BackButton.show();
-  }
+  if (tg?.BackButton) { id === 'dashboard' ? tg.BackButton.hide() : tg.BackButton.show(); }
 }
 
 function showTab(id, btn) {
@@ -2028,124 +1910,68 @@ function showToast(msg, isError) {
    INIT
 ═══════════════════════════════════════════ */
 window.addEventListener('DOMContentLoaded', async () => {
-  // Close modals on overlay click
   document.getElementById('deleteModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
   document.getElementById('balanceModal').addEventListener('click', function(e) { if (e.target === this) closeBalanceModal(); });
-  document.getElementById('setupBanner').addEventListener('click', function(e) { if (e.target === this) {} }); // prevent close on overlay click
-
-  // Allow Enter in balance modal
+  document.getElementById('syncModal').addEventListener('click', function(e) { if (e.target === this) closeSyncModal(); });
   const bi = document.getElementById('balanceInput');
   if (bi) bi.addEventListener('keydown', e => { if (e.key === 'Enter') saveBalanceSetting(); });
 
-  // Init Supabase if already configured
-  const sbReady = initSupabase();
-
-  // Render local data immediately (fast)
+  // Render local data first (instant)
   renderDashboard();
   renderTrades();
   renderAnalytics();
 
-  // Then try to pull cloud data (overrides local if newer/more)
-  if (sbReady) {
-    setSyncStatus('syncing');
-    const result = await loadFromCloud();
+  // Then pull from cloud if configured
+  if (initSupabase()) {
+    const result = await pullFromCloud();
     if (result) {
-      // Merge: use whichever has more trades, or merge by ID
       const cloudIds = new Set(result.trades.map(t => t.id));
       const localOnly = TRADES.filter(t => !cloudIds.has(t.id));
-      // Cloud is source of truth + any local-only trades
       TRADES = [...result.trades, ...localOnly];
       saveTrades(TRADES);
-
-      if (result.balance !== null && result.balance !== STARTING_BALANCE) {
-        STARTING_BALANCE = result.balance;
-        saveBalance(STARTING_BALANCE);
-      }
-
-      renderDashboard();
-      renderTrades();
-      renderAnalytics();
-      setSyncStatus('synced');
-
-      // Push any local-only trades up
-      if (localOnly.length > 0) {
-        syncToCloud(TRADES, STARTING_BALANCE);
-      }
+      if (result.balance !== null) { STARTING_BALANCE = result.balance; saveBalance(STARTING_BALANCE); }
+      if (localOnly.length > 0) pushToCloud(TRADES, STARTING_BALANCE);
+      renderDashboard(); renderTrades(); renderAnalytics();
     }
   } else {
-    // Show setup banner if never configured and never dismissed
-    const dismissed = localStorage.getItem('gtp_setup_dismissed');
-    if (!dismissed) {
-      setTimeout(() => {
-        document.getElementById('setupBanner').classList.add('open');
-      }, 800);
-    } else {
-      setSyncStatus('local');
-    }
+    setSyncStatus('local');
   }
 });
 </script>
 
-<!-- SUPABASE SETUP BANNER -->
-<div id="setupBanner">
-  <div class="setup-card">
-    <h2>☁️ Cloud Sync Setup</h2>
-    <p>To sync trades across all your devices, connect a free Supabase database. This takes about 5 minutes.</p>
+<!-- CLOUD SYNC MODAL -->
+<div class="setup-overlay" id="syncModal">
+  <div class="setup-box">
+    <h2>☁️ Cloud Sync</h2>
+    <p>Connect a free Supabase database so your trades sync across all devices including Telegram.</p>
 
     <div class="setup-step">
-      <strong>Step 1 — Create free Supabase project</strong><br>
-      Go to <strong>supabase.com</strong> → New Project → choose a name &amp; password → wait ~1 min for it to start.
+      <strong>Step 1</strong> — Go to <strong>supabase.com</strong> → your project →
+      <strong>SQL Editor</strong> → run the setup SQL (ask Claude for it if needed)
     </div>
     <div class="setup-step">
-      <strong>Step 2 — Create the trades table</strong><br>
-      In your Supabase dashboard → <strong>SQL Editor</strong> → paste and run this:
-      <br><br>
-      <code>CREATE TABLE trades (
-  id text PRIMARY KEY,
-  user_id text NOT NULL,
-  data jsonb NOT NULL,
-  updated_at timestamptz DEFAULT now()
-);
-ALTER TABLE trades ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Users own their trades" ON trades
-  FOR ALL USING (user_id = current_setting('app.user_id', true))
-  WITH CHECK (user_id = current_setting('app.user_id', true));
-
-CREATE TABLE user_settings (
-  user_id text PRIMARY KEY,
-  starting_balance numeric DEFAULT 10000,
-  updated_at timestamptz DEFAULT now()
-);
-ALTER TABLE user_settings ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Users own their settings" ON user_settings
-  FOR ALL USING (user_id = current_setting('app.user_id', true))
-  WITH CHECK (user_id = current_setting('app.user_id', true));</code>
+      <strong>Step 2</strong> — Go to <strong>Settings → API Keys</strong> →
+      copy the <strong>Project URL</strong> and <strong>anon</strong> key
     </div>
     <div class="setup-step">
-      <strong>Step 3 — Get your API keys</strong><br>
-      Go to <strong>Project Settings → API</strong>. Copy your <strong>Project URL</strong> and <strong>anon/public key</strong>.
-    </div>
-    <div class="setup-step">
-      <strong>Step 4 — Paste them below</strong>
+      <strong>Step 3</strong> — Paste them below and click Connect
     </div>
 
-    <div class="config-group">
-      <div class="config-label">Supabase Project URL</div>
-      <input type="text" id="sbUrl" class="form-input" placeholder="https://xxxxxxxxxxxx.supabase.co">
-    </div>
-    <div class="config-group">
-      <div class="config-label">Supabase Anon Key</div>
-      <input type="text" id="sbKey" class="form-input" placeholder="eyJhbGciOiJIUzI1NiIs...">
+    <div style="margin-top:16px">
+      <div style="font-size:12px;font-weight:500;color:var(--muted);margin-bottom:5px">Project URL</div>
+      <input type="url" id="sbUrlInput" class="form-input" placeholder="https://xxxxxxxxxx.supabase.co"
+             style="margin-bottom:12px">
+      <div style="font-size:12px;font-weight:500;color:var(--muted);margin-bottom:5px">Anon / Public Key</div>
+      <input type="text" id="sbKeyInput" class="form-input" placeholder="eyJhbGciOiJIUzI1NiIs...">
     </div>
 
-    <button class="setup-done-btn" onclick="saveSupabaseConfig()">
-      <i class="ti ti-cloud-upload" style="font-size:16px"></i> Connect & Sync
+    <div id="syncStatus" style="display:none;margin-top:12px;padding:10px 14px;border-radius:var(--radius-md);font-size:13px"></div>
+
+    <button class="setup-connect-btn" id="connectBtn" onclick="connectSupabase()">
+      <i class="ti ti-cloud-upload" style="font-size:16px"></i>
+      <span>Connect &amp; Sync</span>
     </button>
-    <div style="text-align:center;margin-top:12px">
-      <button onclick="dismissSetup()" style="background:none;border:none;color:var(--hint);font-size:12px;cursor:pointer;font-family:inherit">
-        Skip — use local storage only
-      </button>
-    </div>
+    <button class="setup-skip" onclick="closeSyncModal()">Close</button>
   </div>
 </div>
 
